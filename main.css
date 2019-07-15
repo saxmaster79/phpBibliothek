@@ -1,0 +1,96 @@
+@charset "utf-8";
+body{
+	font-family:Verdana, Helvetica, Arial, sans-serif;
+	background:#5599FF;
+}
+textarea{
+	font-family:Verdana, Helvetica, Arial, sans-serif;
+	font-size:smaller;
+}
+
+.nav{
+	background-color:#F0F2FF;
+	border:1px solid gray; 
+	padding:4px; 
+	font-size:75%;
+	border-collapse:collapse;
+}
+
+table{
+	
+}
+
+.copyleft{
+	width:60%;
+	text-align:center;
+	
+}
+
+table.formTable{
+	/*border:1px solid black; */
+}
+
+td{
+	/*border:1px solid black; */
+}
+
+table.list {	
+	width:75%;
+	border:1px solid black; 
+	padding:4px; 
+	margin:0px;
+	border-collapse:collapse;
+}
+
+th{
+	white-space:nowrap;
+	background-color:#E0E0E0;
+	padding:4px;
+	border:1px solid black;
+}
+
+td.list{
+	font-size:smaller;
+	padding:4px;
+	border:1px solid black;	
+}
+td.bottom{
+	background-color:#E0E0E0;
+	padding:4px;
+	border:1px solid black;
+}
+
+tr.odd{
+	background-color:white;
+}
+
+tr.even{
+	background-color:#F0F0F0;
+}
+
+.errorField{
+	width:75%;
+	border:1px solid black; 
+	padding:4px; 
+	margin:15px;
+	border-collapse:collapse;
+	background-color:#FF8040;
+}
+
+.warningField{
+	width:75%;
+	border:1px solid black; 
+	padding:4px; 
+	margin:15px;
+	border-collapse:collapse;
+	background-color:#FFFF80;
+}
+
+.statusField{
+	width:75%;
+	border:1px solid black; 
+	padding:4px; 
+	margin:15px;
+	border-collapse:collapse;
+	background-color:#FFFFFF;
+}

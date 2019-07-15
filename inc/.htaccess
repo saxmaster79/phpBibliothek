@@ -1,0 +1,4 @@
+AuthName "bibliothek"
+AuthType Basic
+AuthUserFile /home/www/web111/html/bibliothek/.htpasswd
+require valid-user
