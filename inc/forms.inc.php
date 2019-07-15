@@ -122,6 +122,9 @@ function selectionRow($label, $name, $resultSet, $default, $con){
 	closeTableRow();
 }
 
+/**
+ * creates a dropdown (html select) for the resultSet
+ */
 function selection($label, $name, $resultSet, $default, $onChange, $con){
 	echo"
 			<td class='label'>$label:</td>
