@@ -32,8 +32,8 @@ function dbQuery($connection, $sql){
 }
 
 function beforeDB($conn, $str){
-	$ret=trim($str);
-	$ret = strip_tags($ret);
+    $ret = trim($str);
+    $ret = strip_tags($ret);
 	return mysqli_escape_string($conn, $ret);
 }
 function afterDB($str){
@@ -71,8 +71,9 @@ function checkDbVersion() {
 	$con=dbconnect();
 	$sql = "select db.dbversion from dbversion db";
 	$result = mysqli_fetch_row(dbQuery($con, $sql));
-	if($result[0] != 2){
-		errorDie("Falsche Datenbankversion: ".$result[0]." statt 2");
+	$expectedVersion = 3;
+	if($result[0] != $expectedVersion){
+		errorDie("Falsche Datenbankversion: ".$result[0]." statt ".$expectedVersion);
 	}
 }
 

@@ -7,6 +7,7 @@ include_once("inc/forms.inc.php");
 include_once("inc/functions.inc.php");
 include_once("inc/dbfunctions.inc.php");
 include_once("inc/bookutils.inc.php");
+include_once("inc/isbn/ISBN.php");
 
 dumpVars($_GET, "GET VARS:");
 
@@ -24,19 +25,24 @@ $sql=null;
 //table headers
 $headers = array(0 => array("order"=>"allebuecher.id", "title"=>"Nr"),
 1 => array("order"=>"Kennung", "title"=>"Kennung"),
-2 => array("order"=>"Medium", "title"=>"Medium"),
-3 => array("order"=>"Autor", "title"=>"Autor"),
-4 => array("order"=>"Reihe", "title"=>"Reihe"),
-5 => array("order"=>"Titel", "title"=>"Titel"),
-6 => array("order"=>"Gruppe", "title"=>"Gruppe"),
-7 => array("order"=>"Schluesselwoerter", "title"=>"Schlüsselwörter"),
-8 => array("order"=>"Standort", "title"=>"Standort"),
-9 => array("order"=>"Ausgeliehen von", "title"=>"Name"),
-10 => array("order"=>"bis", "title"=>"bis"),
+2 => array("order"=>"ISBN", "title"=>"ISBN"),
+3 => array("order"=>"Medium", "title"=>"Medium"),
+4 => array("order"=>"Autor", "title"=>"Autor"),
+5 => array("order"=>"Reihe", "title"=>"Reihe"),
+6 => array("order"=>"Titel", "title"=>"Titel"),
+7 => array("order"=>"Gruppe", "title"=>"Gruppe"),
+8 => array("order"=>"Schluesselwoerter", "title"=>"Schlüsselwörter"),
+9 => array("order"=>"Standort", "title"=>"Standort"),
+10 => array("order"=>"Ausgeliehen von", "title"=>"Name"),
+11 => array("order"=>"bis", "title"=>"bis"),
 );
 $con=dbconnect();
-if(!isEmpty($showAllBooks) || $orderId!=null || !isEmpty($searchCriterion)){
-	$wheres = array("Gruppe"=>$selectedGruppe, "Standort"=>$selectedStandort, "Medium"=>$selectedMedium);
+if (!isEmpty($showAllBooks) || $orderId != null || !isEmpty($searchCriterion)) {
+    $sql = 'SELECT allebuecher.id , `Kennung`, `ISBN`, `Medium` , `Autor`, `Reihe`, `Titel` , `Gruppe` , '
+        . ' `Schluesselwoerter` , `Standort`, `alleschueler`.`Name` , `ausleihen`.`bis` '
+        . ' FROM `allebuecher` left join `ausleihen` ON (allebuecher.id=buchId and zurueckgebracht=0) left join `alleschueler` '
+        . ' ON (alleschueler.id=schuelerId) ';
+    $wheres = array("Gruppe"=>$selectedGruppe, "Standort"=>$selectedStandort, "Medium"=>$selectedMedium);
 	$additionalWhere = createWhere($con, $wheres);
 	if (!isEmpty($showAllBooks) || $orderId!=null){//
 		$ascdesc="ASC";
@@ -48,12 +54,8 @@ if(!isEmpty($showAllBooks) || $orderId!=null || !isEmpty($searchCriterion)){
 
 		$all=true;
 		$order=$headers[$orderId]["order"];
-		$sql = 'SELECT allebuecher.id , `Kennung`, `Medium` , `Autor`, `Reihe`, `Titel` , `Gruppe` , '
-		. ' `Schluesselwoerter` , `Standort`, `alleschueler`.`Name` , `ausleihen`.`bis` '
-		. ' FROM `allebuecher` left join `ausleihen` ON (allebuecher.id=buchId and zurueckgebracht=0) left join `alleschueler` '
-		. ' ON (alleschueler.id=schuelerId) '
-		. createWhereIfNecessary($additionalWhere)
-		. ' ORDER BY '.$order.' '.$ascdesc;
+        $sql .= createWhereIfNecessary($additionalWhere)
+            . ' ORDER BY ' . $order . ' ' . $ascdesc;
 	}elseif(!isEmpty($searchCriterion)){
 		/***************************************************************************
 		 * ACHTUNG ACHTUNG
@@ -62,18 +64,12 @@ if(!isEmpty($showAllBooks) || $orderId!=null || !isEmpty($searchCriterion)){
 		 * this is the most desirable behavior: A natural language query should not return every
 		 * second row from a 1GB table. For small datasets, it may be less desirable.
 		 * ---> Immer 3 Rows haben!
-		 *
-		 *
 		 ***************************************************************************/
 		$all=false;
 		$searchCriterion = beforeDB($con, $searchCriterion);
-		
-		$sql = 'SELECT allebuecher.id , `Kennung`, `Medium` , `Autor`, `Reihe`, `Titel` , `Gruppe` , '
-		. '`Schluesselwoerter` , `Standort`, `alleschueler`.`name`, .`ausleihen`.`bis` '
-		. 'FROM `allebuecher` left join `ausleihen` ON (allebuecher.id=buchId and zurueckgebracht=0) left join `alleschueler` '
-		. 'ON (alleschueler.id=schuelerId) '
-		. 'WHERE MATCH (`Titel` , `Schluesselwoerter`, `Autor`, `Reihe`) AGAINST (\''.$searchCriterion.'\' ) '
-		. createAndIfNecessary($additionalWhere);
+
+        $sql .= 'WHERE MATCH (`Titel` , `Schluesselwoerter`, `Autor`, `Reihe`) AGAINST (\'' . $searchCriterion . '\' ) '
+            . createAndIfNecessary($additionalWhere);
 	}
 }
 
@@ -138,7 +134,7 @@ if(!isEmpty($sql)){
 	$i=0;
 	while($menge=mysqli_fetch_row($result)){
 		$menge=arrayAfterDB($menge, mysqli_num_fields($result));
-		list ($id, $label, $medium, $author, $row, $title, $group, $keywords, $location, $pupil, $returnUntil) = $menge;
+		list ($id, $label, $isbn, $medium, $author, $row, $title, $group, $keywords, $location, $pupil, $returnUntil) = $menge;
 		$returnUntil=datum_konvert($returnUntil);
 		openChangeTableRow($i);
 		echo"
@@ -147,6 +143,9 @@ if(!isEmpty($sql)){
 	    			</td>
 	    			<td class='list'>
 	    			$label
+	    			</td>
+	    			<td class='list'>
+	    			".isbn_dashes($isbn)."
 	    			</td>
 	    			<td class='list'>
 	    			$medium
@@ -195,11 +194,11 @@ if(!isEmpty($sql)){
 	openTableRow();
 	if ($i==0){
 		echo"
-					<td colspan='11' class='bottom'>Keine Medien gefunden</td>
+					<td colspan='".count($headers)."' class='bottom'>Keine Medien gefunden</td>
 		";
 	}else {
 		echo"
-					<td colspan='11' class='bottom'>$i Medien gefunden</td>
+					<td colspan='".count($headers)."' class='bottom'>$i Medien gefunden</td>
 		";
 
 	}
