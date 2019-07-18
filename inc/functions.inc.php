@@ -61,6 +61,37 @@ function checkAttribute($attribute, $concatenatedMsg, $attrname){
 	//also return previous errors
 	return $concatenatedMsg;
 }
+
+/**
+ * Schreibt einen Fehler, falls $attribute nicht leer und keine ganze Zahl ist
+ */
+function checkIntAttribute($attribute, $concatenatedMsg, $attrname){
+    if(!isEmpty($attribute) && !ctype_digit($attribute)){
+        if ($concatenatedMsg==""){
+            $concatenatedMsg=$attrname;
+        }else{
+            $concatenatedMsg.=", ".$attrname;
+        }
+    }
+    //also return previous errors
+    return $concatenatedMsg;
+}
+
+/**
+ * Schreibt einen Fehler, falls $attribute nicht leer und keine Decimal Zahl ist.
+ */
+function checkDecimalAttribute($attribute, $concatenatedMsg, $attrname){
+    if(!isEmpty($attribute) && !is_numeric($attribute)){
+        if ($concatenatedMsg==""){
+            $concatenatedMsg=$attrname;
+        }else{
+            $concatenatedMsg.=", ".$attrname;
+        }
+    }
+    //also return previous errors
+    return $concatenatedMsg;
+}
+
 /**
  * Usage: dumpPostVars($_POST);
  */
