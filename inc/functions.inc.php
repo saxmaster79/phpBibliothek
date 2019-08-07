@@ -2,18 +2,10 @@
 // 0000-00-00 <-> 00.00.0000
 function datum_konvert($ddmmyyyy){
 	if (strstr($ddmmyyyy, ".")){
-		$Datum=explode(".", $ddmmyyyy);
-		if (count($Datum)!=3) return false;
-		$tag=trim($Datum[0]);
-		$monat=trim($Datum[1]);
-		$jahr=datum_yyyy(trim($Datum[2]));
-		// if (DEBUG)
-		//     echo"Tag: $tag, Monat: $monat, Jahr: $jahr<br />";
-		$ok=checkdate($monat, $tag, $jahr);
-		if ($ok)
-		return $jahr."-".$monat."-".$tag;
-		else
-		return false;
+
+        $date = date_create_from_format ( 'd.m.Y' , $ddmmyyyy );
+		if (!$date) return false;
+		return  date_format($date, 'Y-m-d');
 	}
 	elseif(strstr($ddmmyyyy, "-")){
 		$Datum=explode("-", $ddmmyyyy);

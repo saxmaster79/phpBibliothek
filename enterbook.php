@@ -33,11 +33,12 @@ $checked=false;
 $con=dbconnect();
 
 if(!isEmpty($showButton)){
-		if ($bookId!=NULL && $bookId!=""){
+		if ($bookId){
 			dbconnect();
 			$sql = 'SELECT `id`, `Kennung`, `Medium`, `Autor`, `Reihe`, `Zählung`, `Titel`, `Gruppe`, `Schluesselwoerter`, `Standort`, `ISBN`, `Neupreis`, `Beschaffung` '.
 			'FROM `allebuecher` '.
 			'WHERE `id`="'.$bookId.'" LIMIT 0, 30';
+
 			$result=dbquery($con, $sql);
 			$menge=mysqli_fetch_array($result);
 			$menge=arrayAfterDB($menge, mysqli_num_fields($result));
@@ -118,14 +119,16 @@ if(!isEmpty($showButton)){
 				$location=beforeDB($con, $location);
 				$label=beforeDB($con, $label);
 				$row=beforeDB($con, $row);
-				$zaehlung=beforeDB($con, $zaehlung);
+				$zaehlung=beforeDBNonString($con, $zaehlung);
 				$isbn=isbn_cleandashes($isbn);
-				$price=beforeDB($con, $price);
-                $beschaffung = $convertedBeschaffung;
-                $sql = 'UPDATE `allebuecher` SET `Medium`="' . $medium . '", `Autor`="' . $author . '", `Reihe`="' . $row . '", `Zählung`="' . $zaehlung . '", `Kennung`="' . $label . '", ' .
+				$price=beforeDBNonString($con, $price);
+
+                echo"Beschaffung $beschaffung";
+                $sql = 'UPDATE `allebuecher` SET `Medium`="' . $medium . '", `Autor`="' . $author . '", `Reihe`="' . $row . '", `Zählung`=' . $zaehlung . ', `Kennung`="' . $label . '", ' .
                     '`Titel`="' . $title . '", `Gruppe`="' . $group . '", `Schluesselwoerter`="' . $keyWords . '", `Standort`="' . $location . '", `ISBN`="' . $isbn . '", '.
-                    '`Neupreis`="' . $price . '", `Beschaffung`="' . $convertedBeschaffung . '"' .
+                    '`Neupreis`=' . $price . ', `Beschaffung`=' . ($convertedBeschaffung ? '"'.$convertedBeschaffung.'"' : 'NULL') . ' ' .
                     'WHERE `id`="' . $bookId . '"';
+                echo "update ". $sql;
 				mysqli_query($con, $sql);
 				if(dberrorSql($con, $sql)){
 					die();
@@ -159,7 +162,7 @@ if(!isEmpty($showButton)){
             $price=beforeDB($con, $price);
             $beschaffung = $convertedBeschaffung;
 			$sql='INSERT INTO `allebuecher` (`id`, `Medium`, `Autor`, `Reihe`, `Zählung`, `Titel`, `Kennung`, `Gruppe`, `Schluesselwoerter`, `Standort`, `ISBN`, `Neupreis`, `Beschaffung`) '.
-			'VALUES ("'.$bookId.'", "'.$medium.'", "'.$author.'", "'.$row.'", "'.$zaehlung.'", "'.$title.'", "'.$label.'", "'.$group.'", "'.$keyWords.'", "'.$location.'", "'.$isbn.'", "'.$price.'", "'.$beschaffung.'")';
+			'VALUES ("'.$bookId.'", "'.$medium.'", "'.$author.'", "'.$row.'", '.$zaehlung.', "'.$title.'", "'.$label.'", "'.$group.'", "'.$keyWords.'", "'.$location.'", "'.$isbn.'", "'.$price.'", "'.$beschaffung.'")';
 			mysqli_query($con, $sql);
 			if(dberrorSql($con, $sql)){
 				die();
@@ -212,7 +215,7 @@ $mediaResult=getMediaFromDB($con);
 openForm("enterbook.php");
 hiddenField("checked", $checked);
 textFieldSubmitRow("Nr.", "bookId", $bookId, "Anzeigen", "showButton");
-textFieldRow("Kennung", "label", $label);
+textFieldRow("Signatur", "label", $label);
 selectionWithAdderRow("Medium", "medium", $mediaResult, $medium);
 textFieldRow("Autor", "author", $author);
 textFieldRow("Reihe", "row", $row);
@@ -224,7 +227,7 @@ textFieldRow("Datum Beschaffung", "beschaffung", $beschaffung);
 selectionWithAdderRow("Gruppe", "group", $groupResult, $group);
 selectionWithAdderRow("Standort", "location", $locationResult,  $location);
 textAreaRow("Schlüsselwörter", "keyWords", $keyWords);
-textDisplayRow("Hinweis", "Titel, Reihe und Autor müssen nicht erneut eingegeben werden.");
+textDisplayRow("Hinweis", "Titel, Reihe und Autor müssen nicht als Schlüsselwörter eingegeben werden.");
 if($bookId==""){
 	twoSubmitTableRowOneDisabled("Löschen", "Speichern", "deleteButton","saveButton",1);
 }else{

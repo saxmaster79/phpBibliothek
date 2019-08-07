@@ -23,23 +23,27 @@ $userRight=$_SESSION['userRight']?? "";
 
 $sql=null;
 //table headers
-$headers = array(0 => array("order"=>"allebuecher.id", "title"=>"Nr"),
-1 => array("order"=>"Kennung", "title"=>"Kennung"),
-2 => array("order"=>"ISBN", "title"=>"ISBN"),
-3 => array("order"=>"Medium", "title"=>"Medium"),
-4 => array("order"=>"Autor", "title"=>"Autor"),
-5 => array("order"=>"Reihe", "title"=>"Reihe"),
-6 => array("order"=>"Titel", "title"=>"Titel"),
-7 => array("order"=>"Gruppe", "title"=>"Gruppe"),
-8 => array("order"=>"Schluesselwoerter", "title"=>"Schlüsselwörter"),
-9 => array("order"=>"Standort", "title"=>"Standort"),
-10 => array("order"=>"Ausgeliehen von", "title"=>"Name"),
-11 => array("order"=>"bis", "title"=>"bis"),
+
+$headers = array(0 => array("order" => "allebuecher.id", "title" => "Nr"),
+    1 => array("order" => "Kennung", "title" => "Signatur"),
+    2 => array("order" => "ISBN", "title" => "ISBN"),
+    3 => array("order" => "Medium", "title" => "Medium"),
+    4 => array("order" => "Autor", "title" => "Autor"),
+    5 => array("order" => "Reihe", "title" => "Reihe"),
+    6 => array("order" => "Zählung", "title" => "Zählung"),
+    7 => array("order" => "Titel", "title" => "Titel"),
+    8 => array("order" => "Gruppe", "title" => "Gruppe"),
+    9 => array("order" => "Schluesselwoerter", "title" => "Schlüsselwörter"),
+    10 => array("order" => "Standort", "title" => "Standort"),
+    11 => array("order" => "Neupreis", "title" => "Neupreis"),
+    12 => array("order" => "Beschaffung", "title" => "Beschaffung"),
+    13 => array("order" => "Ausgeliehen von", "title" => "Name"),
+    14 => array("order" => "bis", "title" => "bis"),
 );
 $con=dbconnect();
 if (!isEmpty($showAllBooks) || $orderId != null || !isEmpty($searchCriterion)) {
-    $sql = 'SELECT allebuecher.id , `Kennung`, `ISBN`, `Medium` , `Autor`, `Reihe`, `Titel` , `Gruppe` , '
-        . ' `Schluesselwoerter` , `Standort`, `alleschueler`.`Name` , `ausleihen`.`bis` '
+    $sql = 'SELECT allebuecher.id , `Kennung`, `ISBN`, `Medium` , `Autor`, `Reihe`, `Zählung`, `Titel` , `Gruppe` , '
+        . ' `Schluesselwoerter` , `Standort`, `Neupreis`, `Beschaffung`, `alleschueler`.`Name` , `ausleihen`.`bis` '
         . ' FROM `allebuecher` left join `ausleihen` ON (allebuecher.id=buchId and zurueckgebracht=0) left join `alleschueler` '
         . ' ON (alleschueler.id=schuelerId) ';
     $wheres = array("Gruppe"=>$selectedGruppe, "Standort"=>$selectedStandort, "Medium"=>$selectedMedium);
@@ -134,7 +138,7 @@ if(!isEmpty($sql)){
 	$i=0;
 	while($menge=mysqli_fetch_row($result)){
 		$menge=arrayAfterDB($menge, mysqli_num_fields($result));
-		list ($id, $label, $isbn, $medium, $author, $row, $title, $group, $keywords, $location, $pupil, $returnUntil) = $menge;
+		list ($id, $label, $isbn, $medium, $author, $row, $zaehlung, $title, $group, $keywords, $location, $price, $beschaffung, $pupil, $returnUntil) = $menge;
 		$returnUntil=datum_konvert($returnUntil);
 		openChangeTableRow($i);
 		echo"
@@ -150,12 +154,14 @@ if(!isEmpty($sql)){
 	    			<td class='list'>
 	    			$medium
 	    			</td>
-	    
 	    			<td class='list'>
 	    			$author
 	    			</td>
 	    			<td class='list'>
 	    			$row
+	    			</td>
+	    			<td class='list'>
+	    			$zaehlung
 	    			</td>
 					<td class='list'>
 					$title
@@ -166,10 +172,16 @@ if(!isEmpty($sql)){
 	    			<td class='list'>
 	    			$keywords
 	    			</td>
-				<td class='list'>
-				$location
+                    <td class='list'>
+                    $location
 	    			</td>
-				<td class='list'>";
+	    			<td class='list'>
+                    $price
+	    			</td>
+                    <td class='list'>
+                    ".datum_konvert($beschaffung)."
+	    			</td>
+				    <td class='list'>";
 				if($userRight>=RIGHT_NORMAL_USER){
 					echo($pupil);
 				}else{

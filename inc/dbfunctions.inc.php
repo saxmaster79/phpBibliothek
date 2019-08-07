@@ -32,10 +32,19 @@ function dbQuery($connection, $sql){
 }
 
 function beforeDB($conn, $str){
-    $ret = trim($str);
-    $ret = strip_tags($ret);
+    $ret = strip_tags($str);
+    $ret = trim($ret);
+    if($ret == false) return null;
 	return mysqli_escape_string($conn, $ret);
 }
+
+function beforeDBNonString($conn, $str){
+    $ret = strip_tags($str);
+    $ret = trim($ret);
+    if(strlen($ret)==0) return "NULL";
+    return mysqli_escape_string($conn, $ret);
+}
+
 function afterDB($str){
 	$ret= stripslashes($str);
 	return $ret;
