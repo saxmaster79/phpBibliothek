@@ -7,7 +7,7 @@ include_once("inc/functions.inc.php");
 include_once("inc/dbfunctions.inc.php");
 
 //init vars
-$checked=false;
+$checked=$_POST['checked'];
 $deleteClass=false;
 $class=null;
 $newClass=null;
@@ -52,7 +52,6 @@ if($showButton!=""&&$showButton!=null){
 
 	$resultNewName=dbquery($con, $sql);
 	if(mysqli_num_rows($resultNewName)>0){
-		//ask user if merge classes
 		$errors = "Es existiert bereits eine Klasse mit dem Namen ".$newClass."! Geben sie einen anderen Namen ein.";
 	}
 
