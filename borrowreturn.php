@@ -156,7 +156,14 @@ closeForm();
 <?php
 openForm("borrowreturn.php");
 hiddenField("pupilId", $pupilId);
-textFieldRow("Nr.", "no", "");
+    openTableRow();
+    echo "
+			<td class='label'>Nr. :</td>
+			<td class='formField'>
+				<input type='text' name='no' class='textField' autofocus />
+			</td>	
+	";
+		closeTableRow();
 $date=getDateInDays(DAYS_TO_BORROW);
 textFieldRow("Zurückgeben bis", "returnUntil", $date);
 submitTableRow("Ausleihen", "borrow");
