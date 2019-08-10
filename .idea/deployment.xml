@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="On explicit save action" serverName="abnasWeb" autoUploadExternalChanges="true">
+    <serverData>
+      <paths name="abnasWeb">
+        <serverdata>
+          <mappings>
+            <mapping deploy="phpBibliothek" local="$PROJECT_DIR$" web="w:\phpBibliothek" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ON_EXPLICIT_SAVE" />
+  </component>
+</project>
