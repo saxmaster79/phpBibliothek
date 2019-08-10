@@ -129,7 +129,7 @@ function selection($label, $name, $resultSet, $default, $onChange, $con){
 	echo"
 			<td class='label'>$label:</td>
 			<td class='formField'>
-				<select name='$name' onChange='$onChange' >\n
+				<select name='$name' onChange='$onChange' class='textField'>\n
 					<option value=''>[kein(e) $label ausgewählt]</option>
 	";
 	while($menge=mysqli_fetch_row($resultSet)){
@@ -156,7 +156,7 @@ function selectionArrayRow($label, $name, $array, $default){
 	echo"
 			<td class='label'>$label:</td>
 			<td class='formField'>
-				<select name='$name'>\n
+				<select name='$name' class='textField'>\n
 					<option value=''>[kein $label ausgewählt]</option>
 	";
 	foreach ($array as $value => $optionName){
@@ -257,7 +257,7 @@ function selectionAll($label, $name, $resultSet, $showNoneEntry, $showAllEntry, 
 			<td class='label'>$label:</td>
 			<td class='formField'>
 				<span id='$name"."0'>
-				<select name='$name' id='$name"."selectId'>\n
+				<select name='$name' id='$name"."selectId' class='textField'>\n
 					<option value=''>[kein $label ausgewählt]</option>
 	";
 		$inserted=false;
@@ -304,7 +304,7 @@ function selectionAll($label, $name, $resultSet, $showNoneEntry, $showAllEntry, 
 	function textDisplayRow($label, $toDisplay){
 		openTableRow();
 		echo"
-			<td class='label'>$label:</td>
+			<td class='label'>". ($label ? $label : "") ."</td>
 			<td class='formField'>
 			$toDisplay
 			</td>	

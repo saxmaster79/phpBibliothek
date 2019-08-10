@@ -1,4 +1,5 @@
 <?PHP
+const SEARCH_ISBN = "Google Books abfragen";
 include_once("inc/common.inc.php");
 $pageRight=RIGHT_COUNTER;
 include_once("inc/nav.inc.php");
@@ -14,6 +15,7 @@ dumpPostVars($_POST);
 $showButton=getFromPostOrGet('showButton') ?? "";
 $saveButton=$_POST['saveButton'] ?? "";
 $deleteButton=$_POST['deleteButton'] ?? "";
+$searchIsbnButton = $_POST['searchIsbnButton'] ?? "";
 
 //init vars
 $label=NULL;
@@ -59,20 +61,22 @@ if(!isEmpty($showButton)){
 		}else {
 			errorOut("Bitte eine Buch-Nr. angeben!");
 		}
-}else if($saveButton==" Speichern "){
-	$label=$_POST['label'];
-	$medium=$_POST['medium'];
-	$author=$_POST['author'];
-	$row=$_POST['row'];
+} elseif($saveButton==" Speichern "){
+    $label=$_POST['label'];
+    $medium=$_POST['medium'];
+    $author=$_POST['author'];
+    $row=$_POST['row'];
     $zaehlung=$_POST['zaehlung'];
-	$title=$_POST['title'];
-	$group=$_POST['group'];
-	$location=$_POST['location'];
-	$keyWords=$_POST['keyWords'];
-	$checked=$_POST['checked'];
-	$isbn=$_POST['isbn'];
+    $title=$_POST['title'];
+    $group=$_POST['group'];
+    $location=$_POST['location'];
+    $keyWords=$_POST['keyWords'];
+    $checked=$_POST['checked'];
+    $isbn=$_POST['isbn'];
     $price=$_POST['price'];
     $beschaffung=$_POST['beschaffung'];
+
+
 	//TODO: Validierung richtig einbauen
 	$errors="";
 	$errors=checkAttribute($bookId, $errors, "Buch-Nr.");
@@ -198,7 +202,35 @@ if(!isEmpty($showButton)){
 		require_once("dialog.inc.php");
 		yesOrNoDialog($title, $text, "bookId", $bookId, "delete.php");
 	}
+} elseif($searchIsbnButton== " ".SEARCH_ISBN." ") {
+    try {
+        $isbn=$_POST['isbn'];
+        $googleApiUrl= "https://www.googleapis.com/books/v1/volumes?q=isbn:$isbn&key=XXXXXXXXXXXXXX";
+        echo $googleApiUrl."<br />\n";
+        $string =  getTestJSON();//file_get_contents($googleApiUrl);
+        $json_a = json_decode($string, true);
+        $firstItem = $json_a['items'][0];
+
+        $title = $firstItem['volumeInfo']['title'];
+        $subTitle = $firstItem['volumeInfo']['subtitle'];
+        if($subTitle)
+            $title .= " - ".$subTitle;
+        $authors = $firstItem['volumeInfo']['authors'];
+
+        for ($i=0;$i< sizeof($authors); $i++){
+            if($i==0){
+                $author = reverseName($authors[$i]);
+            } else {
+                $author.="; ".reverseName($authors[$i]);
+            }
+        }
+
+    } catch (Exception $e) {
+        if(DEBUG)
+            echo 'Exception abgefangen: ',  $e->getMessage(), "\n";
+    }
 }else{
+    echo "nix selected";
 	//Standardwerte für neues Buch:
 	$medium="Buch";
 	$checked="";
@@ -221,13 +253,13 @@ textFieldRow("Autor", "author", $author);
 textFieldRow("Reihe", "row", $row);
 textFieldRow("Zählung", "zaehlung", $zaehlung);
 textFieldRow("Titel", "title", $title);
-textFieldRow("ISBN", "isbn", $isbn);
+textFieldSubmitRow("ISBN", "isbn", $isbn, SEARCH_ISBN, "searchIsbnButton");
 textFieldRow("Neupreis", "price", $price);
 textFieldRow("Datum Beschaffung", "beschaffung", $beschaffung);
 selectionWithAdderRow("Gruppe", "group", $groupResult, $group);
 selectionWithAdderRow("Standort", "location", $locationResult,  $location);
 textAreaRow("Schlüsselwörter", "keyWords", $keyWords);
-textDisplayRow("Hinweis", "Titel, Reihe und Autor müssen nicht als Schlüsselwörter eingegeben werden.");
+textDisplayRow("", "Titel, Reihe und Autor müssen nicht als Schlüsselwörter eingegeben werden.");
 if($bookId==""){
 	twoSubmitTableRowOneDisabled("Löschen", "Speichern", "deleteButton","saveButton",1);
 }else{
@@ -253,6 +285,104 @@ function checkISBN($isbn_no, $errormsg){
 		$errormsg.="</br>Ungültige ISBN";
 	}
 	return $errormsg;
+}
+
+function reverseName($string) {
+    if(!$string) return null;
+    $arr = explode(' ', $string);
+    $num = count($arr);
+    if ($num > 1) {
+        $name = $arr[$num-1].", ";
+        for ($i = 0; $i < $num -1; $i++){
+            $name.=" ".$arr[$i];
+        }
+        return $name;
+    } else {
+        return $string;
+    }
+}
+
+function getTestJSON(){
+return "
+{
+ \"kind\": \"books#volumes\",
+ \"totalItems\": 1,
+ \"items\": [
+  {
+   \"kind\": \"books#volume\",
+   \"id\": \"O4eYswEACAAJ\",
+   \"etag\": \"xfmmSBMtNKc\",
+   \"selfLink\": \"https://www.googleapis.com/books/v1/volumes/O4eYswEACAAJ\",
+   \"volumeInfo\": {
+    \"title\": \"Asterix in Italien\",
+    \"authors\": [
+     \"Jean-Yves Ferri\",
+     \"Didier Conrad\"
+    ],
+    \"publishedDate\": \"2017-10-19\",
+    \"description\": \"Asterix und Obelix begeben sich in die Höhle des Löwen! Ein turbulentes Abenteuer der Gallier im Italien der Antike.\",
+    \"industryIdentifiers\": [
+     {
+      \"type\": \"ISBN_10\",
+      \"identifier\": \"3770440374\"
+     },
+     {
+      \"type\": \"ISBN_13\",
+      \"identifier\": \"9783770440375\"
+     }
+    ],
+    \"readingModes\": {
+     \"text\": false,
+     \"image\": false
+    },
+    \"pageCount\": 48,
+    \"printType\": \"BOOK\",
+    \"maturityRating\": \"NOT_MATURE\",
+    \"allowAnonLogging\": false,
+    \"contentVersion\": \"preview-1.0.0\",
+    \"panelizationSummary\": {
+     \"containsEpubBubbles\": false,
+     \"containsImageBubbles\": false
+    },
+    \"imageLinks\": {
+     \"smallThumbnail\": \"http://books.google.com/books/content?id=O4eYswEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api\",
+     \"thumbnail\": \"http://books.google.com/books/content?id=O4eYswEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api\"
+    },
+    \"language\": \"de\",
+    \"previewLink\": \"http://books.google.ch/books?id=O4eYswEACAAJ&dq=isbn:9783770440375&hl=&cd=1&source=gbs_api\",
+    \"infoLink\": \"http://books.google.ch/books?id=O4eYswEACAAJ&dq=isbn:9783770440375&hl=&source=gbs_api\",
+    \"canonicalVolumeLink\": \"https://books.google.com/books/about/Asterix_in_Italien.html?hl=&id=O4eYswEACAAJ\"
+   },
+   \"saleInfo\": {
+    \"country\": \"CH\",
+    \"saleability\": \"NOT_FOR_SALE\",
+    \"isEbook\": false
+   },
+   \"accessInfo\": {
+    \"country\": \"CH\",
+    \"viewability\": \"NO_PAGES\",
+    \"embeddable\": false,
+    \"publicDomain\": false,
+    \"textToSpeechPermission\": \"ALLOWED\",
+    \"epub\": {
+     \"isAvailable\": false
+    },
+    \"pdf\": {
+     \"isAvailable\": false
+    },
+    \"webReaderLink\": \"http://play.google.com/books/reader?id=O4eYswEACAAJ&hl=&printsec=frontcover&source=gbs_api\",
+    \"accessViewStatus\": \"NONE\",
+    \"quoteSharingAllowed\": false
+   },
+   \"searchInfo\": {
+    \"textSnippet\": \"Asterix und Obelix nehmen an einem Wagenrennen quer durch Italien teil.\"
+   }
+  }
+ ]
+}
+
+";
+
 }
 ?>
 

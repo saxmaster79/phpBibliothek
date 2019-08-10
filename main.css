@@ -6,6 +6,7 @@ body{
 textarea{
 	font-family:Verdana, Helvetica, Arial, sans-serif;
 	font-size:smaller;
+	width:24em;
 }
 
 .nav{
@@ -30,8 +31,12 @@ table.formTable{
 	/*border:1px solid black; */
 }
 
-td{
+.textField{
 	/*border:1px solid black; */
+	width:24em;
+}
+td.label {
+	vertical-align: baseline;
 }
 
 table.list {	
