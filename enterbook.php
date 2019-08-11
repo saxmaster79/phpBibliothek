@@ -208,7 +208,7 @@ if(!isEmpty($showButton)){
         $isbnNoDashes=isbn_cleandashes($isbn);
         $googleApiUrl= "https://www.googleapis.com/books/v1/volumes?q=isbn:$isbnNoDashes&key=".GOOGLE_API_KEY;
 
-        $string =  curl_get_contents($googleApiUrl);
+        $string = getTestJSON();// curl_get_contents($googleApiUrl);
         $json_a = json_decode($string, true);
         $firstItem = $json_a['items'][0];
 
@@ -293,7 +293,7 @@ function reverseName($string) {
     $arr = explode(' ', $string);
     $num = count($arr);
     if ($num > 1) {
-        $name = $arr[$num-1].", ";
+        $name = $arr[$num-1].",";
         for ($i = 0; $i < $num -1; $i++){
             $name.=" ".$arr[$i];
         }

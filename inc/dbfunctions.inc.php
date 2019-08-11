@@ -2,7 +2,6 @@
 
 function dbconnect(){
 	$con=new mysqli(DBHOST, DBLOGIN, DBPASS, DBNAME);
-	echo "connected";
 	if (mysqli_errno($con)!=0)
 	die("Fehler bei der Datenbankverbindung");
 	// DON'T TOUCH THISSSS
