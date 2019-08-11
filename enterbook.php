@@ -205,9 +205,10 @@ if(!isEmpty($showButton)){
 } elseif($searchIsbnButton== " ".SEARCH_ISBN." ") {
     try {
         $isbn=$_POST['isbn'];
-        $googleApiUrl= "https://www.googleapis.com/books/v1/volumes?q=isbn:$isbn&key=XXXXXXXXXXXXXX";
-        echo $googleApiUrl."<br />\n";
-        $string =  getTestJSON();//file_get_contents($googleApiUrl);
+        $isbnNoDashes=isbn_cleandashes($isbn);
+        $googleApiUrl= "https://www.googleapis.com/books/v1/volumes?q=isbn:$isbnNoDashes&key=".GOOGLE_API_KEY;
+
+        $string =  curl_get_contents($googleApiUrl);
         $json_a = json_decode($string, true);
         $firstItem = $json_a['items'][0];
 
@@ -300,6 +301,18 @@ function reverseName($string) {
     } else {
         return $string;
     }
+}
+
+function curl_get_contents($url)
+{
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+    $data = curl_exec($curl);
+    curl_close($curl);
+    return $data;
 }
 
 function getTestJSON(){
