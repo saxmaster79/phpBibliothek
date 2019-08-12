@@ -146,8 +146,10 @@ if(!isEmpty($showButton)){
 					$location=afterDB($location);
 					$label=afterDB($label);
 					$row=afterDB($row);
-					$isbn=isbn_dashes($isbn);
-					$beschaffung=datum_konvert($convertedBeschaffung);
+                    $zaehlung = $zaehlung == "NULL" ? NULL : $zaehlung;
+                    $isbn = isbn_dashes($isbn);
+                    $beschaffung = datum_konvert($convertedBeschaffung);
+                    $price = $price == "NULL" ? NULL : $price;
 					statusOut("Buch wurde aktualisiert");
 				}
 			}
