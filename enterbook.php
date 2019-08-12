@@ -126,13 +126,13 @@ if(!isEmpty($showButton)){
 				$zaehlung=beforeDBNonString($con, $zaehlung);
 				$isbn=isbn_cleandashes($isbn);
 				$price=beforeDBNonString($con, $price);
+                $beschaffung = $convertedBeschaffung;
 
-                echo"Beschaffung $beschaffung";
                 $sql = 'UPDATE `allebuecher` SET `Medium`="' . $medium . '", `Autor`="' . $author . '", `Reihe`="' . $row . '", `Zählung`=' . $zaehlung . ', `Kennung`="' . $label . '", ' .
                     '`Titel`="' . $title . '", `Gruppe`="' . $group . '", `Schluesselwoerter`="' . $keyWords . '", `Standort`="' . $location . '", `ISBN`="' . $isbn . '", '.
                     '`Neupreis`=' . $price . ', `Beschaffung`=' . ($convertedBeschaffung ? '"'.$convertedBeschaffung.'"' : 'NULL') . ' ' .
                     'WHERE `id`="' . $bookId . '"';
-                echo "update ". $sql;
+
 				mysqli_query($con, $sql);
 				if(dberrorSql($con, $sql)){
 					die();
@@ -161,9 +161,9 @@ if(!isEmpty($showButton)){
             $location=beforeDB($con, $location);
             $label=beforeDB($con, $label);
             $row=beforeDB($con, $row);
-            $zaehlung=beforeDB($con, $zaehlung);
+            $zaehlung=beforeDBNonString($con, $zaehlung);
             $isbn=isbn_cleandashes($isbn);
-            $price=beforeDB($con, $price);
+            $price=beforeDBNonString($con, $price);
             $beschaffung = $convertedBeschaffung;
 			$sql='INSERT INTO `allebuecher` (`id`, `Medium`, `Autor`, `Reihe`, `Zählung`, `Titel`, `Kennung`, `Gruppe`, `Schluesselwoerter`, `Standort`, `ISBN`, `Neupreis`, `Beschaffung`) '.
 			'VALUES ("'.$bookId.'", "'.$medium.'", "'.$author.'", "'.$row.'", '.$zaehlung.', "'.$title.'", "'.$label.'", "'.$group.'", "'.$keyWords.'", "'.$location.'", "'.$isbn.'", "'.$price.'", "'.$beschaffung.'")';
@@ -180,11 +180,11 @@ if(!isEmpty($showButton)){
 				$location="";
 				$keyWords="";
 				$row="";
-                $zaehlung=null;
+                $zaehlung="";
 				$label="";
-				$isbn=null;
-				$beschaffung=null;
-				$price=null;
+				$isbn="";
+				$beschaffung="";
+				$price="";
 			}
 		}
 	}

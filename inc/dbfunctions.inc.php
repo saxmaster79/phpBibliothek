@@ -9,16 +9,20 @@ function dbconnect(){
 	return $con;
 }
 function dberror($connection){
-	if (mysqli_errno($connection)!=0 && DEBUG){
-		echo "<p>Fehler: ".mysqli_errno($connection).": ".mysqli_error($connection)."</p>";
+	if (mysqli_errno($connection)!=0){
+        if(DEBUG){
+            echo "<p>Fehler: ".mysqli_errno($connection).": ".mysqli_error($connection)."</p>";
+        }
 		return true;
 	}
 	return false;
 }
  function dberrorSql($connection, $sql){
-	if (mysqli_errno($connection)!=0 && DEBUG){
-		echo "<p>Fehler: ".mysqli_errno($connection).": ".mysqli_error($connection)."<br>
-		$sql</p>";
+	if (mysqli_errno($connection)!=0){
+        if(DEBUG){
+            echo "<p>Fehler: ".mysqli_errno($connection).": ".mysqli_error($connection)."<br>
+            $sql</p>";
+        }
 		return true;
 	}
 	return false;
