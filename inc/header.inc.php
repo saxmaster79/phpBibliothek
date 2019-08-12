@@ -29,7 +29,7 @@ function closebody(){
 			<br />
 			<p class=\"copyleft\">
 			phpBibliothek<br />
-			Version 2.0.1<br />
+			Version 2.0.2<br />
 			Copyright (C) 2019 Benno Inderbitzin
 			</p>
 		</body>
