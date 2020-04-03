@@ -99,11 +99,9 @@ twoSubmitTableRow("Suchen", "Alle anzeigen", "searchBook", "showAllBooks");
 closeForm();
 
 if(!isEmpty($sql)){
-	if(DEBUG){
-		echo"$sql";
-	}
 	$result=dbquery($con, $sql);
-	echo"	<table class='list'>";
+	echo"   <p><a href='#0' onclick=\"exportTableToCsv('allebuecher')\"><img style='max-width: 3em;' src='img/csv.svg' alt='CSV exportieren' title='CSV exportieren'/></a></p>\n";
+	echo"	<table class='list' id='allebuecher'>";
 	openTableRow();
 	$link="searchbook.php?order=";
 	foreach ($headers as $key => $element){

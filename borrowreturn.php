@@ -84,7 +84,7 @@ closeForm();
 
 echo"<br /><br />";
 if($pupilId!=""&&$pupilId!=-1){
-	$sql = 'SELECT ausl.id, bu.id, bu.reihe, bu.titel, ausl.von, ausl.bis '.
+	$sql = 'SELECT ausl.id, bu.id, bu.reihe, bu.titel, bu.medium, ausl.von, ausl.bis '.
 	'FROM ausleihen as ausl, allebuecher as bu '.
 	'WHERE schuelerId='.$pupilId.' and ausl.buchId=bu.id and ausl.zurueckgebracht=0 '.
 	'ORDER BY bis LIMIT 0, 30';
@@ -96,13 +96,13 @@ echo"
 ";
 openTableRow();
 echo"
-			<th>Zurück</th><th>Nr.</th><th>Reihe</th><th>Titel</th><th>von</th><th>bis</th>
+			<th>Zurück</th><th>Nr.</th><th>Reihe</th><th>Titel</th><th>Medium</th><th>von</th><th>bis</th>
 ";
 closeTableRow();
 $i=0;
 while($menge=mysqli_fetch_row($result)){
     $menge=arrayAfterDB($menge, mysqli_num_fields($result));
-	list ($borrowId, $bookId, $row, $bookTitle, $from, $to) = $menge;
+	list ($borrowId, $bookId, $row, $bookTitle, $medium, $from, $to) = $menge;
     
     $from=datum_konvert($from);
     $to=datum_konvert($to);
@@ -119,6 +119,9 @@ while($menge=mysqli_fetch_row($result)){
     			</td>
     			<td class='list'>
     				$bookTitle
+    			</td>
+    			<td class='list'>
+    				$medium
     			</td>
     			<td class='list'>
     				$from
@@ -141,7 +144,7 @@ if ($i==0){
 	openTableRow();
 	echo"
 	
-					<td colspan='6' class='bottom'>
+					<td colspan='7' class='bottom'>
 	";
 	hiddenField("pupilId", $pupilId);
 	hiddenField("rowCount", $i);

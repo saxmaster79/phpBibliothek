@@ -210,7 +210,7 @@ if(!isEmpty($showButton)){
         $isbnNoDashes=isbn_cleandashes($isbn);
         $googleApiUrl= "https://www.googleapis.com/books/v1/volumes?q=isbn:$isbnNoDashes&key=".GOOGLE_API_KEY;
 
-        $string = getTestJSON();// curl_get_contents($googleApiUrl);
+        $string =  curl_get_contents($googleApiUrl);//getTestJSON();//
         $json_a = json_decode($string, true);
         $firstItem = $json_a['items'][0];
 
