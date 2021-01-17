@@ -29,8 +29,8 @@ function closebody(){
 			<br />
 			<p class=\"copyleft\">
 			phpBibliothek<br />
-			Version 2.1.0<br />
-			Copyright (C) 2020 Benno Inderbitzin
+			Version 2.1.1<br />
+			Copyright (C) 2021 Benno Inderbitzin
 			</p>
 		</body>
 	</html>
