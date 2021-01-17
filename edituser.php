@@ -33,7 +33,7 @@ if(isset($_POST['action'])){
 				$errors;
 		}	
 	}	
-	if(!preg_match("/^[a-zA-Z0-9]+$/",$username)){
+	if(!preg_match("/^[a-zA-Z0-9\.\-]+$/",$username)){
 		$errors="Der Benutzername darf nur aus Buchstaben und Zahlen bestehen, Leerzeichen sind nicht erlaubt. <br />\n".
 			$errors;
 	}
@@ -45,6 +45,8 @@ if(isset($_POST['action'])){
 		$action=beforeDB($con, $action);
 		$username=beforeDB($con,  $username);
 		$newUserRights=beforeDB($con,  $newUserRights);
+		if($newUserRights == "")
+			$newUserRights = 0;
 		$realname=beforeDB($con,  $realname);
 
 		if($pw1!=""){
