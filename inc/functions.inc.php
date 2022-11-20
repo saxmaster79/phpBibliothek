@@ -1,6 +1,7 @@
 <?php
 // 0000-00-00 <-> 00.00.0000
 function datum_konvert($ddmmyyyy){
+	if(is_null($ddmmyyyy)) return false;
 	if (strstr($ddmmyyyy, ".")){
 
         $date = date_create_from_format ( 'd.m.Y' , $ddmmyyyy );
@@ -94,9 +95,10 @@ function dumpVars($arr, $text){
 	if(DEBUG){
 		echo "<p>$text<br>";
 		//reset ($HTTP_POST_VARS);
-		while (isset($arr) && list ($key, $val) = each ($arr)) {
-			echo "$key => $val<br>";
-		}
+
+            foreach ($arr as $key => $value) {
+                echo "$key => $value<br>";
+            }
 		echo"</p>";
 	}
 }

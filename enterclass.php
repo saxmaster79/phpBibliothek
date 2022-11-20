@@ -133,10 +133,10 @@ if($showButton!=""&&$showButton!=null){
 	}
 }elseif($deleteButton==" Löschen "){
 	//überprüfen ob der Klasse noch Schüler zugeordnet sind.
-	dbconnect();
+
 	$sql = 'SELECT id FROM `alleschueler` WHERE Klasse="'.$class.'" LIMIT 0, 50';
 
-	$noOfPupils=mysqli_num_rows(mysqli_query($sql));
+	$noOfPupils=mysqli_num_rows(mysqli_query($con, $sql));
 	if($noOfPupils>0){
 		errorOut("Dieser Klasse sind $noOfPupils Schüler zugeordnet! Sie kann deshalb nicht gelöscht werden.");
 	}else {

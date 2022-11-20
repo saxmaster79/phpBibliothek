@@ -49,6 +49,7 @@ function beforeDBNonString($conn, $str){
 }
 
 function afterDB($str){
+    if(is_null($str)) return $str;
 	$ret= stripslashes($str);
 	return $ret;
 
@@ -56,8 +57,6 @@ function afterDB($str){
  
 function arrayAfterDB($array, $num_fields){
 	//if (DEBUG) dumpVars($array, "beforeAfterDB:-)");
-
-	if(count($array[0])==0) return $array;
 	for($i=0;$i<$num_fields;$i++){
 		$array[$i]=afterDB($array[$i]);
 	}

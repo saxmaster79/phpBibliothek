@@ -3,7 +3,7 @@
  * includes the real config file
  * relative to the including script :-(
  */
-include_once("../config.php");
+include_once("../../files/bibliothek/config.php");
 
 /************************************/
 
@@ -24,7 +24,7 @@ if (!defined ("RIGHT_EVERYBODY")){
 		error_reporting(E_ALL);
 		//error_reporting(E_ALL ^ E_NOTICE);
 	}else{
-		error_reporting(E_NONE);
+		error_reporting(0);
 	}
 }
 ?>

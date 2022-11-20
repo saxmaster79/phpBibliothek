@@ -3,13 +3,14 @@
 if (!defined ("DBHOST")){  //falls nicht schon mal included wurde
 
 	define("DBHOST", "localhost");//Server
-	define("DBLOGIN", "login");//DB-Loginname
-	define("DBPASS", "pwd");//PW
-	define("DBNAME", "dbname");//Name der Datenbank
+	define("DBLOGIN", "db12220455-2");//DB-Loginname
+	define("DBPASS", "brggT9_u8");//PW
+	define("DBNAME", "db12220455-2");//Name der Datenbank
+	define("GOOGLE_API_KEY", "AIzaSyCoLOQNfb2t6BqHvlBgH4xwopOrAO6qpWM");
 
-	define("BASEURL", "");
+	define("BASEURL", "https://bibliothek.shs-steinen.ch");
 	define("DAYS_TO_BORROW", 28);
-	define("DEBUG", TRUE);//normalerweise FALSE, nur fuer Entwicklungszwecke auf TRUE setzen.
-	define("TITLE", "Hier kommt der titel");//Titel der Applikation
+	define("DEBUG", FALSE);//normalerweise FALSE, nur fuer Entwicklungszwecke auf TRUE setzen.
+	define("TITLE", "Schulbibliothek Sprachheilschule Steinen");//Titel der Applikation
 }
 ?>
