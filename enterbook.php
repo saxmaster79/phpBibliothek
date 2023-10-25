@@ -126,7 +126,6 @@ if(!isEmpty($showButton)){
 				$zaehlung=beforeDBNonString($con, $zaehlung);
 				$isbn=isbn_cleandashes($isbn);
 				$price=beforeDBNonString($con, $price);
-                $beschaffung = $convertedBeschaffung;
 
                 $sql = 'UPDATE `allebuecher` SET `Medium`="' . $medium . '", `Autor`="' . $author . '", `Reihe`="' . $row . '", `Zählung`=' . $zaehlung . ', `Kennung`="' . $label . '", ' .
                     '`Titel`="' . $title . '", `Gruppe`="' . $group . '", `Schluesselwoerter`="' . $keyWords . '", `Standort`="' . $location . '", `ISBN`="' . $isbn . '", '.
@@ -166,9 +165,8 @@ if(!isEmpty($showButton)){
             $zaehlung=beforeDBNonString($con, $zaehlung);
             $isbn=isbn_cleandashes($isbn);
             $price=beforeDBNonString($con, $price);
-            $beschaffung = $convertedBeschaffung;
 			$sql='INSERT INTO `allebuecher` (`id`, `Medium`, `Autor`, `Reihe`, `Zählung`, `Titel`, `Kennung`, `Gruppe`, `Schluesselwoerter`, `Standort`, `ISBN`, `Neupreis`, `Beschaffung`) '.
-			'VALUES ("'.$bookId.'", "'.$medium.'", "'.$author.'", "'.$row.'", '.$zaehlung.', "'.$title.'", "'.$label.'", "'.$group.'", "'.$keyWords.'", "'.$location.'", "'.$isbn.'", "'.$price.'", "'.$beschaffung.'")';
+			'VALUES ("'.$bookId.'", "'.$medium.'", "'.$author.'", "'.$row.'", '.$zaehlung.', "'.$title.'", "'.$label.'", "'.$group.'", "'.$keyWords.'", "'.$location.'", "'.$isbn.'", '.$price.', ' . ($convertedBeschaffung ? '"'.$convertedBeschaffung.'"' : 'NULL') . ')';
 			mysqli_query($con, $sql);
 			if(dberrorSql($con, $sql)){
 				die();

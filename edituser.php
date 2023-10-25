@@ -93,6 +93,7 @@ if(isset($_POST['action'])){
 		$realname="";	
 	}
 }
+echo "CRYPT_SALT_LENGTH".CRYPT_SALT_LENGTH;
 echo"<h1>Benutzer </h1>";
 openForm("edituser.php");
 hiddenField("action", $action);
